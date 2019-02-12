@@ -93,6 +93,7 @@ public class P1Metaheuristicas {
                     //Ya que conociendo el tamaño podemos separar sus filas y sus columnas
                     if (cadena.isEmpty()){
                         matrizFlujos.addElement(new Vector<>(tamano*tamano));
+                        matrizDistancias.addElement(new Vector<>(tamano*tamano));
                         //System.out.println("Matriz " + columna + ":");
                     } else {
                         //System.out.println("Fila numero:" + fila);
@@ -102,6 +103,7 @@ public class P1Metaheuristicas {
                             Integer num = new Integer(cadfila[q]);
                             //System.out.println("Insertar numero: " + num + " en la posicion " + columna + " " + fila);
                             matrizFlujos.get(matrizFlujos.size()-1).add(num);
+                            matrizDistancias.get(matrizDistancias.size()-1).add(num);
                         }
                     }
                 }
