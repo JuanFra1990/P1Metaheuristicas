@@ -47,20 +47,32 @@ public class P1Metaheuristicas {
             switch (opcion){
                 case '1':
                    System.out.println("Has seleccionado la opción de cargar datos");
-                   cargaDatos("./archivos/cnf01.dat");
+                   cargaDatos("./archivos/cnf02.dat");
                    break;
                 case '2':
                    System.out.println("Has seleccionado la opción de seleccionar semilla");
                    break;
                 case '3':
-                   System.out.println("Has seleccionado la opción del Algoritmo Greedy");
-                   ArrayList<Integer> valoresDistancia = new ArrayList<>(tamano);
-                   ArrayList<Integer> valoresFlujo = new ArrayList<>(tamano);
-                   calculoFilasGreedy(valoresDistancia, valoresFlujo);
-                   ArrayList<Integer> vectorSolucion = AlgoritmoGreedy(valoresDistancia, valoresFlujo);
-                   
-                   for (Iterator<Integer> i = vectorSolucion.iterator(); i.hasNext();) {
-                        Integer item = i.next();
+                    if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                        System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
+                        Reader entradaIn=new InputStreamReader(System.in);
+                        opcion=(char)entradaIn.read();
+                        if (opcion == 'S'){
+                            cargaDatos("./archivos/cnf02.dat");
+                        } else {
+                            System.out.println("Sin datos no podemos lanzar el algoritmo, greedy.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    } 
+                    
+                    System.out.println("Has seleccionado la opción del Algoritmo Greedy");
+                    ArrayList<Integer> valoresDistancia = new ArrayList<>(tamano);
+                    ArrayList<Integer> valoresFlujo = new ArrayList<>(tamano);
+                    calculoFilasGreedy(valoresDistancia, valoresFlujo);
+                    ArrayList<Integer> vectorSolucion = AlgoritmoGreedy(valoresDistancia, valoresFlujo);
+
+                    for (Integer item : vectorSolucion) {
                         System.out.println(item);
                     }
                    
@@ -184,7 +196,6 @@ public class P1Metaheuristicas {
         Integer posicion = 0;
         Integer flujoMaximo = -10;
         Integer distanciaMinima = 999999999;
-        
         for (int i = 0; i< tamano; i++){
             for (int j = 0; j< tamano; j++){
                 if (valoresDistancia.get(i) < distanciaMinima){
@@ -210,10 +221,39 @@ public class P1Metaheuristicas {
         }
         
         for (int i = 0; i < tamano; i++) {
+            System.out.println("En la posicion: " + vectorIndice1.get(i) + " El numero " + vectorIndice2.get(i));
             vectorSolucion.add(vectorIndice1.get(i), vectorIndice2.get(i));
         }
-        
+       
         return vectorSolucion;
+    }
+    
+    //************************************** Búsqueda Local************************************** //
+     /**
+     * @param array ArrayList de entrada y salida donde vamos a cambiar las posiciones
+     * @param origen Integer que indica la posicion del elemento origen
+     * @param destino Integer que indica la posicion del elemento destino
+     * @description Funcion de apoyo para la Búsqueda Local, que permite hacer intercambio de elementos de diferentes posiciones,
+     * dado el Array y su posicion origen y destino.
+     */
+    
+    public static void intercambioPosiciones(ArrayList<Integer> array, Integer origen, Integer destino ){
+        Integer auxiliar = array.get(origen);
+        array.set(origen, array.get(destino));
+        array.set(destino, auxiliar);
+    }
+    
+     /**
+     * @param valoresDistancia ArrayList de entrada para obtener la suma de las filas de la matriz Distancia
+     * @param valoresFlujo ArrayList de entrada para obtener la suma de las filas de la matriz Flujo
+     * @description En esta funcion el objetivo es obtener la solución greedy mediante nuestros parametros de entrada, calculados previamente
+     * y con distintas variables apoyo como son vectorIndice1, vectorIndice2, posicion, flujoMaximo y distanciaMaxima, el calculo consiste en
+     * recorrer cada Array y comparar tanto la distancia minima como el flujo maximo, de superar los umbrales marcados se actualiza el valor y
+     * la posicion del Array y se almacena en nuestros vectoresIndice, que más tarde la unión de estos saldra nuestro vectorSolucion.
+     */
+    public static ArrayList<Integer> AlgoritmoBusquedaLocal(ArrayList<Integer> valoresDistancia, ArrayList<Integer> valoresFlujo){
+        ArrayList<Integer> array = new ArrayList<>();
+        return array;
     }
     
 
