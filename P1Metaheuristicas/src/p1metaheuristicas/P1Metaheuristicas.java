@@ -124,21 +124,21 @@ public class P1Metaheuristicas {
                                matrizFlujos.add(new ArrayList<>(tamano));
                         }
                         
-                        if (matrizDistancias.size() <= tamano){
-                            String[] cadfila = cadena.split(" ");
-                            for (String cadfila1 : cadfila) {
-                                Integer num = new Integer(cadfila1);
-                                matrizDistancias.get(matrizDistancias.size()-1).add(num);
-                            }
-                            matrizDistancias.add(new ArrayList<>(tamano));
-                            
-                        } else {
+                        if (matrizFlujos.size() <= tamano){
                             String[] cadfila = cadena.split(" ");
                             for (String cadfila1 : cadfila) {
                                 Integer num = new Integer(cadfila1);
                                 matrizFlujos.get(matrizFlujos.size()-1).add(num);
                             }
-                            matrizFlujos.add(new ArrayList<>(tamano));   
+                            matrizFlujos.add(new ArrayList<>(tamano));
+                            
+                        } else {
+                            String[] cadfila = cadena.split(" ");
+                            for (String cadfila1 : cadfila) {
+                                Integer num = new Integer(cadfila1);
+                                matrizDistancias.get(matrizDistancias.size()-1).add(num);
+                            }
+                            matrizDistancias.add(new ArrayList<>(tamano));   
                         }
                     }
                 }
@@ -149,8 +149,8 @@ public class P1Metaheuristicas {
         System.out.println("Carga realizada de manera correcta");
         int tamDistancias = matrizDistancias.size() -1;
         int tamFlujos = matrizFlujos.size() -1;
-        System.out.println("El tamaño de la matriz de distancias es: " + tamDistancias);
         System.out.println("El tamaño de la matriz de flujos es: " + tamFlujos);
+        System.out.println("El tamaño de la matriz de distancias es: " + tamDistancias);
     }
     
     /**
