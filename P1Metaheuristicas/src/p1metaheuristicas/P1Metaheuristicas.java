@@ -39,7 +39,7 @@ public class P1Metaheuristicas {
            System.out.println("--- 2. Seleccion de semilla ----------------");
            System.out.println("--- 3. Seleccion de algoritmo greedy--------");
            System.out.println("--- 4. Finalizar Programa ------------------");
-           System.out.println("--------------------------------------------");
+          // System.out.println("--------------------------------------------");
            System.out.println("Introduce opción: ");
            Reader entrada=new InputStreamReader(System.in);
            opcion=(char)entrada.read();
