@@ -24,23 +24,27 @@ public class P1Metaheuristicas {
     
     private static final ArrayList<ArrayList<Integer>> matrizDistancias = new ArrayList<>();
     private static final ArrayList<ArrayList<Integer>> matrizFlujos = new ArrayList<>();
+    
+    ArrayList<Integer> semillas = new ArrayList<>();
+    
     /**
      * @param args the command line arguments
      * @description Es la función principal de nuestra clase 
      * @throws java.io.IOException
      */
-    public static void main(String[] args) throws IOException {
+    public void main(String[] args) throws IOException {
        StringBuilder str=new StringBuilder();
        char opcion = '0';
-       while (opcion != '6') {
-           System.out.println("---------------Menú Practica 1 ----------------------");
-           System.out.println("--- 1. Carga de datos -------------------------------");
-           System.out.println("--- 2. Seleccion de semilla -------------------------");
-           System.out.println("--- 3. Seleccion de algoritmo greedy-----------------");
-           System.out.println("--- 4. Seleccion de algoritmo busqueda Local---------");
-           System.out.println("--- 5. Seleccion de algoritmo Enfriamiento Simulado--");
-           System.out.println("--- 6. Finalizar Programa ---------------------------");
-           System.out.println("-----------------------------------------------------");
+       while (opcion != '7') {
+           System.out.println("---------------Menú Practica 1 -----------------------------------------");
+           System.out.println("--- 1. Carga de datos --------------------------------------------------");
+           System.out.println("--- 2. Seleccion de semilla --------------------------------------------");
+           System.out.println("--- 3. Seleccion de algoritmo greedy------------------------------------");
+           System.out.println("--- 4. Seleccion de algoritmo busqueda Local (Algoritmo Greedy)---------");
+           System.out.println("--- 5. Seleccion de algoritmo busqueda Local (Aleatoria)----------------");
+           System.out.println("--- 6. Seleccion de algoritmo Enfriamiento Simulado --------------------");
+           System.out.println("--- 7. Finalizar Programa ----------------------------------------------");
+           System.out.println("------------------------------------------------------------------------");
            System.out.println("Introduce opción: ");
            Reader entrada=new InputStreamReader(System.in);
            opcion=(char)entrada.read();
@@ -51,7 +55,17 @@ public class P1Metaheuristicas {
                    cargaDatos("./archivos/cnf02.dat");
                    break;
                 case '2':
-                   System.out.println("Has seleccionado la opción de seleccionar semilla");
+                   System.out.println("Has seleccionado la opción de seleccionar semillas");
+                   System.out.println("¿Cuantas semillas desea introducir?");
+                   Reader entradaNumeroSemillas=new InputStreamReader(System.in);
+                   opcion=(char)entradaNumeroSemillas.read();
+                   Integer contador = 1;
+                   while ((int)opcion > 0){
+                        System.out.println("Introduzca la semilla numero " + contador);
+                        Reader entradaSemillas=new InputStreamReader(System.in);
+                        opcion=(char)entradaSemillas.read();
+                        semillas.add((int)opcion);
+                   }
                    break;
                 case '3':
                     if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
@@ -77,14 +91,67 @@ public class P1Metaheuristicas {
                     ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy(valoresDistancia, valoresFlujo);                   
                    break;
                  case '4':
-                   System.out.println("El algoritmo búsqueda local esta en proceso.");
-                   System.out.println("Elija otra. ¡Gracias!.");
+                    if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                        System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
+                        Reader entradaIn=new InputStreamReader(System.in);
+                        opcion=(char)entradaIn.read();
+                        if (opcion == 'S'){
+                            cargaDatos("./archivos/cnf02.dat");
+                        } else {
+                            System.out.println("Sin datos no podemos lanzar el algoritmo de búsqueda local.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }  
+                    
+                   System.out.println("Has seleccionado la opción del Algoritmo Busqueda Local a traves de la solución Greedy");
+                    ArrayList<Integer> valoresDistanciaBL = new ArrayList<>(tamano);
+                    ArrayList<Integer> valoresFlujoBL = new ArrayList<>(tamano);
+                    AlgoritmoGreedy alg = new AlgoritmoGreedy();
+                    alg.setTamano(tamano);
+                    alg.setArrays(matrizDistancias, matrizFlujos);
+                    alg.calculoFilasGreedy(valoresDistanciaBL, valoresFlujoBL);
+                    ArrayList<Integer> vectorSolucionBL = alg.AlgoritmoGreedy(valoresDistanciaBL, valoresFlujoBL);
+                    
+                    BusquedaLocal busquedaLocal = new BusquedaLocal();
+                    busquedaLocal.setSolucionAnterior(vectorSolucionBL);
+                    Integer coste = busquedaLocal.AlgoritmoBusquedaLocal();
+                    System.out.println(busquedaLocal.ConversorArrayString());
+                    System.out.println("Coste: " + coste);
                    break;
                 case '5':
+                    ArrayList<Integer> Aleatorio = new ArrayList<>();
+                    if (semillas.size() == 0){
+                        System.out.println("¿Cuantas semillas desea introducir?");
+                        Reader entradaNumeroSemillasR=new InputStreamReader(System.in);
+                        opcion=(char)entradaNumeroSemillasR.read();
+                        Integer contadorR = 1;
+                        while ((int)opcion > 0){
+                            System.out.println("Introduzca la semilla numero " + contadorR);
+                            Reader entradaSemillas=new InputStreamReader(System.in);
+                            opcion=(char)entradaSemillas.read();
+                            semillas.add((int)opcion);
+                        }
+                    }
+                    Integer c = 0;
+                    while (c < semillas.size()) {
+                        String semi = Integer.toString(semillas.get(c));
+                        System.out.println("Búsqueda Local respecto a la semilla " + semillas.get(c));
+                        Aleatorio.clear();
+                        BusquedaLocal busquedaLocalAleatoria = new BusquedaLocal();
+                        HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
+                        herramientasAuxiliares.cargarVector(Aleatorio);
+                        busquedaLocalAleatoria.setHerramientas(herramientasAuxiliares);
+                        busquedaLocalAleatoria.setSolucionAnterior(Aleatorio);
+                        Integer CosteUltimaSolucion = busquedaLocalAleatoria.AlgoritmoBusquedaLocal();
+                        System.out.println("Coste: " + CosteUltimaSolucion);
+                        c++;
+                    }
+                case '6':
                    System.out.println("El algoritmo de enfriamiento simulado aún no esta implementado.");
                    System.out.println("Elija otra. ¡Gracias!.");
                    break;
-                case '6':
+                case '7':
                    System.out.println("Ha decidido salir del programa, muchisimas gracias por usarlo.");
                    System.out.println("Hasta pronto!");
                    break;
