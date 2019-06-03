@@ -19,31 +19,31 @@ import java.util.ArrayList;
  */
 public class P1Metaheuristicas {
 
-    int Semilla;
     private static Integer tamano;
     
     private static final ArrayList<ArrayList<Integer>> matrizDistancias = new ArrayList<>();
     private static final ArrayList<ArrayList<Integer>> matrizFlujos = new ArrayList<>();
     
-    ArrayList<Integer> semillas = new ArrayList<>();
+    private static ArrayList<Integer> semillas = new ArrayList<>();
     
     /**
      * @param args the command line arguments
      * @description Es la función principal de nuestra clase 
      * @throws java.io.IOException
      */
-    public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
        StringBuilder str=new StringBuilder();
        char opcion = '0';
-       while (opcion != '7') {
+       while (opcion != '8') {
            System.out.println("---------------Menú Practica 1 -----------------------------------------");
            System.out.println("--- 1. Carga de datos --------------------------------------------------");
            System.out.println("--- 2. Seleccion de semilla --------------------------------------------");
            System.out.println("--- 3. Seleccion de algoritmo greedy------------------------------------");
            System.out.println("--- 4. Seleccion de algoritmo busqueda Local (Algoritmo Greedy)---------");
            System.out.println("--- 5. Seleccion de algoritmo busqueda Local (Aleatoria)----------------");
-           System.out.println("--- 6. Seleccion de algoritmo Enfriamiento Simulado --------------------");
-           System.out.println("--- 7. Finalizar Programa ----------------------------------------------");
+           System.out.println("--- 6. Seleccion de algoritmo Enfriamiento Simulado Geometrico----------");
+           System.out.println("--- 7. Seleccion de algoritmo Enfriamiento Simulado Boltzmann-----------");
+           System.out.println("--- 8. Finalizar Programa ----------------------------------------------");
            System.out.println("------------------------------------------------------------------------");
            System.out.println("Introduce opción: ");
            Reader entrada=new InputStreamReader(System.in);
@@ -59,12 +59,15 @@ public class P1Metaheuristicas {
                    System.out.println("¿Cuantas semillas desea introducir?");
                    Reader entradaNumeroSemillas=new InputStreamReader(System.in);
                    opcion=(char)entradaNumeroSemillas.read();
+                   Integer tamanoSemilla = Character.getNumericValue(opcion);
                    Integer contador = 1;
-                   while ((int)opcion > 0){
+                   while (tamanoSemilla > 0){
                         System.out.println("Introduzca la semilla numero " + contador);
                         Reader entradaSemillas=new InputStreamReader(System.in);
                         opcion=(char)entradaSemillas.read();
-                        semillas.add((int)opcion);
+                        semillas.add(Character.getNumericValue(opcion));
+                        tamanoSemilla--;
+                        contador++;
                    }
                    break;
                 case '3':
@@ -121,16 +124,39 @@ public class P1Metaheuristicas {
                    break;
                 case '5':
                     ArrayList<Integer> Aleatorio = new ArrayList<>();
-                    if (semillas.size() == 0){
+                    
+                     if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                        System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
+                        Reader entradaIn=new InputStreamReader(System.in);
+                        opcion=(char)entradaIn.read();
+                        if (opcion == 'S'){
+                            cargaDatos("./archivos/cnf02.dat");
+                        } else {
+                            System.out.println("Sin datos no podemos lanzar el algoritmo de búsqueda local.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }  
+                    
+                    if (semillas.isEmpty()){
                         System.out.println("¿Cuantas semillas desea introducir?");
                         Reader entradaNumeroSemillasR=new InputStreamReader(System.in);
                         opcion=(char)entradaNumeroSemillasR.read();
-                        Integer contadorR = 1;
-                        while ((int)opcion > 0){
+                        Integer tamanoSemillaBL = Character.getNumericValue(opcion);
+                        Integer contadorR = 0;
+                        while ((int)tamanoSemillaBL > 0){
                             System.out.println("Introduzca la semilla numero " + contadorR);
                             Reader entradaSemillas=new InputStreamReader(System.in);
                             opcion=(char)entradaSemillas.read();
-                            semillas.add((int)opcion);
+                            semillas.add(Character.getNumericValue(opcion));
+                            tamanoSemillaBL--;
+                            contadorR++;
+                        }
+                        
+                        if (opcion == 0){
+                            System.out.println("Sin semilla no podemos lanzar el algoritmo de búsqueda local.");
+                            System.out.println("Lo sentimos");
+                            break;
                         }
                     }
                     Integer c = 0;
@@ -148,13 +174,116 @@ public class P1Metaheuristicas {
                         c++;
                     }
                 case '6':
-                   System.out.println("El algoritmo de enfriamiento simulado aún no esta implementado.");
-                   System.out.println("Elija otra. ¡Gracias!.");
+                    ArrayList<Integer> AleatorioSem = new ArrayList<>();
+                   if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                        System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
+                        Reader entradaIn=new InputStreamReader(System.in);
+                        opcion=(char)entradaIn.read();
+                        if (opcion == 'S'){
+                            cargaDatos("./archivos/cnf02.dat");
+                        } else {
+                            System.out.println("Sin datos no podemos lanzar el algoritmo de Enfriamiento simulado Geometrico.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }  
+                    
+                    if (semillas.isEmpty()){
+                        System.out.println("¿Cuantas semillas desea introducir?");
+                        Reader entradaNumeroSemillasR=new InputStreamReader(System.in);
+                        opcion=(char)entradaNumeroSemillasR.read();
+                        Integer tamanoSemillaES = Character.getNumericValue(opcion);
+                        Integer contadorR = 0;
+                        while ((int)tamanoSemillaES > 0){
+                            System.out.println("Introduzca la semilla numero " + contadorR);
+                            Reader entradaSemillas=new InputStreamReader(System.in);
+                            opcion=(char)entradaSemillas.read();
+                            semillas.add(Character.getNumericValue(opcion));
+                            tamanoSemillaES--;
+                            contadorR++;
+                        }
+                        
+                        if (opcion == 0){
+                            System.out.println("Sin semilla no podemos lanzar el algoritmo de Enfriamiento simulado Geometrico.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }
+                    
+                    Integer IndexSemilla = (0 + ((semillas.size()-1)-(0) * (int)Math.random()));
+                    for (int i = 0; i < semillas.size(); i++) {
+                        
+                        String semi = Integer.toString(semillas.get(IndexSemilla));
+                        System.out.println("Enfriamiento simulado Geometrico respecto a la semilla " + semillas.get(IndexSemilla));
+                        AleatorioSem.clear();
+                        EnfriamientoSimulado enfriamientoGeometrico = new EnfriamientoSimulado();
+                        HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
+                        herramientasAuxiliares.cargarVector(AleatorioSem);
+                        enfriamientoGeometrico.setHerramientas(herramientasAuxiliares);
+                        
+                        Integer auxiliar=enfriamientoGeometrico.EnfriamientoSimulado(true);
+                        String CosteUltimaSolucion=Integer.toString(auxiliar);
+                        System.out.println("Coste: " + CosteUltimaSolucion);
+                        IndexSemilla++;
+                    }
                    break;
                 case '7':
-                   System.out.println("Ha decidido salir del programa, muchisimas gracias por usarlo.");
-                   System.out.println("Hasta pronto!");
+                   ArrayList<Integer> AleatorioSemBoltz = new ArrayList<>();
+                   if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                        System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
+                        Reader entradaIn=new InputStreamReader(System.in);
+                        opcion=(char)entradaIn.read();
+                        if (opcion == 'S'){
+                            cargaDatos("./archivos/cnf02.dat");
+                        } else {
+                            System.out.println("Sin datos no podemos lanzar el algoritmo de Enfriamiento simulado Boltzmann.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }  
+                    
+                    if (semillas.isEmpty()){
+                        System.out.println("¿Cuantas semillas desea introducir?");
+                        Reader entradaNumeroSemillasR=new InputStreamReader(System.in);
+                        opcion=(char)entradaNumeroSemillasR.read();
+                        Integer tamanoSemillaESB =  Character.getNumericValue(opcion);;
+                        Integer contadorR = 0;
+                        while ((int)tamanoSemillaESB > 0){
+                            System.out.println("Introduzca la semilla numero " + contadorR);
+                            Reader entradaSemillas=new InputStreamReader(System.in);
+                            opcion=(char)entradaSemillas.read();
+                            semillas.add(Character.getNumericValue(opcion));
+                            tamanoSemillaESB--;
+                            contadorR++;
+                        }
+                        
+                        if (opcion == 0){
+                            System.out.println("Sin semilla no podemos lanzar el algoritmo de Enfriamiento simulado Boltzmann.");
+                            System.out.println("Lo sentimos");
+                            break;
+                        }
+                    }
+                    
+                    Integer IndexsemillaBoltz = (0 + ((semillas.size()-1)-(0) * (int)Math.random()));
+                    for (int i = 0; i < semillas.size(); i++) {
+                        String semi = Integer.toString(semillas.get(IndexsemillaBoltz));
+                        System.out.println("Enfriamiento simulado Boltzmann respecto a la semilla " + semillas.get(IndexsemillaBoltz));
+                        AleatorioSemBoltz.clear();
+                        EnfriamientoSimulado enfriamientoGeometrico = new EnfriamientoSimulado();
+                        HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
+                        herramientasAuxiliares.cargarVector(AleatorioSemBoltz);
+                              
+                        Integer auxiliar=enfriamientoGeometrico.EnfriamientoSimulado(false);
+                        String CosteUltimaSolucion=Integer.toString(auxiliar);
+                        System.out.println("Coste: " + CosteUltimaSolucion);
+                       IndexsemillaBoltz++;
+                    }
+    
                    break;
+                case '8':
+                    System.out.println("Muchas gracias por usar nuestra aplicación.");
+                    System.out.println("Te esperamos pronto. ¡Gracias!.");
+                    break;
                 default:
                    System.out.println("Esta opción no esta contemplada.");
                    System.out.println("Elija otra. ¡Gracias!.");
