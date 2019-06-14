@@ -58,6 +58,7 @@ public class BusquedaLocal {
     }
     
      /**
+     * @return Integer esta funcion devuelve el coste de realizar el algoritmo
      * @description En esta funcion el objetivo es obtener la solución greedy mediante nuestros parametros de entrada, calculados previamente
      * y con distintas variables apoyo como son vectorIndice1, vectorIndice2, posicion, flujoMaximo y distanciaMaxima, el calculo consiste en
      * recorrer cada Array y comparar tanto la distancia minima como el flujo maximo, de superar los umbrales marcados se actualiza el valor y
@@ -68,6 +69,9 @@ public class BusquedaLocal {
         Integer coste = herramientas.costeTotal(solucionAnterior);
         Integer tamanoSolAnterior = solucionAnterior.size();
         ArrayList<Integer> dlb = new ArrayList<>(tamanoSolAnterior);
+        for (int i = 0; i<tamanoSolAnterior; i++){
+            dlb.add(0);
+        }
         Integer contador = 0;
         boolean mejora = true;
         boolean parada = false;

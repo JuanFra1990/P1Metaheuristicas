@@ -18,6 +18,13 @@ public class HerramientasAuxiliares {
     private static ArrayList<ArrayList<Integer>> matrizDistancias;
     Integer tamano;
     
+    /**
+     * @description Esta función permite almacenar el valor del tamano.
+     */
+    
+    public void setTamano(Integer Ntamano) {
+        tamano = Ntamano;
+    }
      /**
      * @description Esta función permite devolver el tamaño de las matrices.
      * @return tamano devuelve un Integer con el tamaño de las matrices de nuestro problema
@@ -25,6 +32,24 @@ public class HerramientasAuxiliares {
     
     public Integer getTamano() {
         return tamano;
+    }
+    
+    /**
+     * @param NmatrizFlujos nueva matriz de flujos para cambiar valor
+     * @description Esta función permite almacenar el valor de la matrizFlujos.
+     */
+    
+    public void setMatrizFlujos(ArrayList<ArrayList<Integer>> NmatrizFlujos) {
+        matrizFlujos = NmatrizFlujos;
+    }
+    
+    /**
+     * @param NmatrizDistancias nueva matriz de distancias para cambiar valor
+     * @description Esta función permite almacenar el valor de la matrizFlujos.
+     */
+    
+    public void setMatrizDistancias(ArrayList<ArrayList<Integer>> NmatrizDistancias) {
+        matrizDistancias = NmatrizDistancias;
     }
     
     /**
@@ -63,10 +88,10 @@ public class HerramientasAuxiliares {
      */
     
     public Integer costeTotal(ArrayList<Integer> Solucion) {
-        Integer coste = 0;
-        for (Integer i = 0; i < tamano; i++) {
-            for (Integer j = 0; j < tamano; j++) {
-                if (!Objects.equals(i, j))
+        int coste = 0;
+        for (int i = 0; i < tamano-1; i++) {
+            for (int j = 0; j < tamano-1; j++) {
+                if (i != j)
                     coste += matrizFlujos.get(i).get(j) * matrizDistancias.get(Solucion.get(i)).get(Solucion.get(j));
             }
         }
@@ -103,12 +128,12 @@ public class HerramientasAuxiliares {
      * @description Esta función rellena de valores auxiliares dentro de un rango nuestro array.
      */
     public void cargarVector(ArrayList<Integer> array) {
-        for (Integer i = 0; i < tamano; i++) {
+        for (int i = 0; i < tamano; i++) {
             array.add(i);
         }
         Integer auxiliar;
         for (int i = tamano - 1; i > 0; i--) {
-            auxiliar = (0 + (i-(0) * (int)Math.random()));
+            auxiliar = (int) (0 + (i - (0) * Math.random()));
             //intercambio de elementos
             Collections.swap(array,i,auxiliar);
         }

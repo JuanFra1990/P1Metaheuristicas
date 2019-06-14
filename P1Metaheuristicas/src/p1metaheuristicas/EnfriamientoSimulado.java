@@ -81,6 +81,9 @@ public class EnfriamientoSimulado {
         Integer tamanoSolActual = solucionActual.size();
         solucionESimulado = solucionActual;
         ArrayList<Integer> dlb = new ArrayList<>(tamanoSolActual);
+        for (int i = 0; i<tamanoSolActual; i++){
+            dlb.add(0);
+        }
         Integer contador = 0;
         boolean mejora = true;
         Double temperatura = 1.5*coste;

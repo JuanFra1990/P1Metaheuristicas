@@ -117,9 +117,15 @@ public class P1Metaheuristicas {
                     ArrayList<Integer> vectorSolucionBL = alg.AlgoritmoGreedy(valoresDistanciaBL, valoresFlujoBL);
                     
                     BusquedaLocal busquedaLocal = new BusquedaLocal();
+                    HerramientasAuxiliares herramientasAuxiliaresBL = new HerramientasAuxiliares();
+                    herramientasAuxiliaresBL.setTamano(tamano);
+                    herramientasAuxiliaresBL.setMatrizDistancias(matrizDistancias);
+                    herramientasAuxiliaresBL.setMatrizFlujos(matrizFlujos);
+                    
+                    
+                    busquedaLocal.setHerramientas(herramientasAuxiliaresBL);
                     busquedaLocal.setSolucionAnterior(vectorSolucionBL);
                     Integer coste = busquedaLocal.AlgoritmoBusquedaLocal();
-                    System.out.println(busquedaLocal.ConversorArrayString());
                     System.out.println("Coste: " + coste);
                    break;
                 case '5':
@@ -166,6 +172,9 @@ public class P1Metaheuristicas {
                         Aleatorio.clear();
                         BusquedaLocal busquedaLocalAleatoria = new BusquedaLocal();
                         HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
+                        herramientasAuxiliares.setTamano(tamano);
+                        herramientasAuxiliares.setMatrizDistancias(matrizDistancias);
+                        herramientasAuxiliares.setMatrizFlujos(matrizFlujos);
                         herramientasAuxiliares.cargarVector(Aleatorio);
                         busquedaLocalAleatoria.setHerramientas(herramientasAuxiliares);
                         busquedaLocalAleatoria.setSolucionAnterior(Aleatorio);
@@ -173,6 +182,7 @@ public class P1Metaheuristicas {
                         System.out.println("Coste: " + CosteUltimaSolucion);
                         c++;
                     }
+                    break;
                 case '6':
                     ArrayList<Integer> AleatorioSem = new ArrayList<>();
                    if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
@@ -210,17 +220,23 @@ public class P1Metaheuristicas {
                         }
                     }
                     
-                    Integer IndexSemilla = (0 + ((semillas.size()-1)-(0) * (int)Math.random()));
+                    Integer IndexSemilla = (int) (0 + ((semillas.size()-1) - (0) * Math.random()));
+                    ArrayList<Integer> AleatorioEG = new ArrayList<>();
+                     
                     for (int i = 0; i < semillas.size(); i++) {
-                        
-                        String semi = Integer.toString(semillas.get(IndexSemilla));
-                        System.out.println("Enfriamiento simulado Geometrico respecto a la semilla " + semillas.get(IndexSemilla));
+                        AleatorioEG.clear();
+                        String semi = Integer.toString(semillas.get(i));
+                        System.out.println("Enfriamiento simulado Geometrico respecto a la semilla " + semillas.get(i));
                         AleatorioSem.clear();
                         EnfriamientoSimulado enfriamientoGeometrico = new EnfriamientoSimulado();
                         HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
+                        herramientasAuxiliares.setTamano(tamano);
                         herramientasAuxiliares.cargarVector(AleatorioSem);
+                        herramientasAuxiliares.setMatrizDistancias(matrizDistancias);
+                        herramientasAuxiliares.setMatrizFlujos(matrizFlujos);
+                        herramientasAuxiliares.cargarVector(AleatorioEG);
                         enfriamientoGeometrico.setHerramientas(herramientasAuxiliares);
-                        
+                        enfriamientoGeometrico.setSolucionActual(AleatorioEG);
                         Integer auxiliar=enfriamientoGeometrico.EnfriamientoSimulado(true);
                         String CosteUltimaSolucion=Integer.toString(auxiliar);
                         System.out.println("Coste: " + CosteUltimaSolucion);
@@ -264,19 +280,27 @@ public class P1Metaheuristicas {
                         }
                     }
                     
-                    Integer IndexsemillaBoltz = (0 + ((semillas.size()-1)-(0) * (int)Math.random()));
+                    Integer IndexsemillaBoltz = (int) (0 + ((semillas.size()-1) - (0) * Math.random()));
+                    ArrayList<Integer> AleatorioEB = new ArrayList<>();
+                    
                     for (int i = 0; i < semillas.size(); i++) {
-                        String semi = Integer.toString(semillas.get(IndexsemillaBoltz));
-                        System.out.println("Enfriamiento simulado Boltzmann respecto a la semilla " + semillas.get(IndexsemillaBoltz));
+                        AleatorioEB.clear();
+                        String semi = Integer.toString(semillas.get(i));
+                         System.out.println("Enfriamiento simulado Boltzmann respecto a la semilla " + semillas.get(i));
                         AleatorioSemBoltz.clear();
-                        EnfriamientoSimulado enfriamientoGeometrico = new EnfriamientoSimulado();
-                        HerramientasAuxiliares herramientasAuxiliares = new HerramientasAuxiliares();
-                        herramientasAuxiliares.cargarVector(AleatorioSemBoltz);
-                              
-                        Integer auxiliar=enfriamientoGeometrico.EnfriamientoSimulado(false);
+                        EnfriamientoSimulado enfriamientoBoltz = new EnfriamientoSimulado();
+                        HerramientasAuxiliares herramientasAuxiliaresBoltz = new HerramientasAuxiliares();
+                        herramientasAuxiliaresBoltz.setTamano(tamano);
+                        herramientasAuxiliaresBoltz.cargarVector(AleatorioSemBoltz);
+                        herramientasAuxiliaresBoltz.setMatrizDistancias(matrizDistancias);
+                        herramientasAuxiliaresBoltz.setMatrizFlujos(matrizFlujos);
+                        herramientasAuxiliaresBoltz.cargarVector(AleatorioEB);
+                        enfriamientoBoltz.setHerramientas(herramientasAuxiliaresBoltz);
+                        enfriamientoBoltz.setSolucionActual(AleatorioEB);
+                        Integer auxiliar=enfriamientoBoltz.EnfriamientoSimulado(false);
                         String CosteUltimaSolucion=Integer.toString(auxiliar);
                         System.out.println("Coste: " + CosteUltimaSolucion);
-                       IndexsemillaBoltz++;
+                        IndexsemillaBoltz++;
                     }
     
                    break;
