@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Timer;
 
 /**
  *
@@ -33,6 +34,8 @@ public class P1Metaheuristicas {
      */
     public static void main(String[] args) throws IOException {
        StringBuilder str=new StringBuilder();
+      long startTime;
+      long endTime;
        char opcion = '0';
        while (opcion != '8') {
            System.out.println("---------------Menú Practica 1 -----------------------------------------");
@@ -85,13 +88,17 @@ public class P1Metaheuristicas {
                     } 
                     
                     System.out.println("Has seleccionado la opción del Algoritmo Greedy");
+                    startTime = System.currentTimeMillis();
                     ArrayList<Integer> valoresDistancia = new ArrayList<>(tamano);
                     ArrayList<Integer> valoresFlujo = new ArrayList<>(tamano);
                     AlgoritmoGreedy ag = new AlgoritmoGreedy();
                     ag.setTamano(tamano);
                     ag.setArrays(matrizDistancias, matrizFlujos);
                     ag.calculoFilasGreedy(valoresDistancia, valoresFlujo);
-                    ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy(valoresDistancia, valoresFlujo);                   
+                    ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy(valoresDistancia, valoresFlujo);
+                    endTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Ha tardado " + endTime + " ms");
+                    
                    break;
                  case '4':
                     if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
@@ -107,7 +114,8 @@ public class P1Metaheuristicas {
                         }
                     }  
                     
-                   System.out.println("Has seleccionado la opción del Algoritmo Busqueda Local a traves de la solución Greedy");
+                    System.out.println("Has seleccionado la opción del Algoritmo Busqueda Local a traves de la solución Greedy");
+                    startTime = System.currentTimeMillis();
                     ArrayList<Integer> valoresDistanciaBL = new ArrayList<>(tamano);
                     ArrayList<Integer> valoresFlujoBL = new ArrayList<>(tamano);
                     AlgoritmoGreedy alg = new AlgoritmoGreedy();
@@ -127,6 +135,8 @@ public class P1Metaheuristicas {
                     busquedaLocal.setSolucionAnterior(vectorSolucionBL);
                     Integer coste = busquedaLocal.AlgoritmoBusquedaLocal();
                     System.out.println("Coste: " + coste);
+                    endTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Ha tardado " + endTime + " ms");
                    break;
                 case '5':
                     ArrayList<Integer> Aleatorio = new ArrayList<>();
@@ -166,6 +176,7 @@ public class P1Metaheuristicas {
                         }
                     }
                     Integer c = 0;
+                    startTime = System.currentTimeMillis();
                     while (c < semillas.size()) {
                         String semi = Integer.toString(semillas.get(c));
                         System.out.println("Búsqueda Local respecto a la semilla " + semillas.get(c));
@@ -182,6 +193,8 @@ public class P1Metaheuristicas {
                         System.out.println("Coste: " + CosteUltimaSolucion);
                         c++;
                     }
+                    endTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Ha tardado " + endTime + " ms");
                     break;
                 case '6':
                     ArrayList<Integer> AleatorioSem = new ArrayList<>();
@@ -222,7 +235,7 @@ public class P1Metaheuristicas {
                     
                     Integer IndexSemilla = (int) (0 + ((semillas.size()-1) - (0) * Math.random()));
                     ArrayList<Integer> AleatorioEG = new ArrayList<>();
-                     
+                    startTime = System.currentTimeMillis();
                     for (int i = 0; i < semillas.size(); i++) {
                         AleatorioEG.clear();
                         String semi = Integer.toString(semillas.get(i));
@@ -242,6 +255,8 @@ public class P1Metaheuristicas {
                         System.out.println("Coste: " + CosteUltimaSolucion);
                         IndexSemilla++;
                     }
+                    endTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Ha tardado " + endTime + " ms");
                    break;
                 case '7':
                    ArrayList<Integer> AleatorioSemBoltz = new ArrayList<>();
@@ -282,7 +297,7 @@ public class P1Metaheuristicas {
                     
                     Integer IndexsemillaBoltz = (int) (0 + ((semillas.size()-1) - (0) * Math.random()));
                     ArrayList<Integer> AleatorioEB = new ArrayList<>();
-                    
+                    startTime = System.currentTimeMillis();
                     for (int i = 0; i < semillas.size(); i++) {
                         AleatorioEB.clear();
                         String semi = Integer.toString(semillas.get(i));
@@ -302,7 +317,8 @@ public class P1Metaheuristicas {
                         System.out.println("Coste: " + CosteUltimaSolucion);
                         IndexsemillaBoltz++;
                     }
-    
+                    endTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Ha tardado " + endTime + " ms");
                    break;
                 case '8':
                     System.out.println("Muchas gracias por usar nuestra aplicación.");
