@@ -55,7 +55,7 @@ public class P1Metaheuristicas {
             switch (opcion){
                 case '1':
                    System.out.println("Has seleccionado la opción de cargar datos");
-                   cargaDatos("./archivos/cnf02.dat");
+                   cargaDatos("./archivos/cnf05dat.sec");
                    break;
                 case '2':
                    System.out.println("Has seleccionado la opción de seleccionar semillas");
@@ -97,7 +97,9 @@ public class P1Metaheuristicas {
                     ag.calculoFilasGreedy(valoresDistancia, valoresFlujo);
                     ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy(valoresDistancia, valoresFlujo);
                     endTime = System.currentTimeMillis() - startTime;
+                    // HerramientasAuxiliares herramientas = new HerramientasAuxiliares();
                     System.out.println("Ha tardado " + endTime + " ms");
+                    // System.out.println("Tiene de coste" + herramientas.costeTotal(vectorSolucion)+ ".");
                     
                    break;
                  case '4':

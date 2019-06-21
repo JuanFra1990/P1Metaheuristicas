@@ -89,8 +89,8 @@ public class HerramientasAuxiliares {
     
     public Integer costeTotal(ArrayList<Integer> Solucion) {
         int coste = 0;
-        for (int i = 0; i < tamano-1; i++) {
-            for (int j = 0; j < tamano-1; j++) {
+        for (int i = 0; i < tamano; i++) {
+            for (int j = 0; j < tamano; j++) {
                 if (i != j)
                     coste += matrizFlujos.get(i).get(j) * matrizDistancias.get(Solucion.get(i)).get(Solucion.get(j));
             }
