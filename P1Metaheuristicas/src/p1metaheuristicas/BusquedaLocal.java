@@ -80,10 +80,10 @@ public class BusquedaLocal {
             mejora = false;
             contador++;        
         
-            for (int i = 0; i < tamanoSolAnterior && !mejora; i++) {
+            for (int i = 0; i < tamanoSolAnterior-1 && !mejora; i++) {
                 if (dlb.get(i) == 0) {
                     parada = false;
-                    for (int j = 0; j < tamanoSolAnterior && !mejora; j++) {
+                    for (int j = 0; j < tamanoSolAnterior-1 && !mejora; j++) {
 
                         Integer CosteFactorial = herramientas.costeFactorial(solucionAnterior, i, j, coste);
                         if (CosteFactorial < coste) {

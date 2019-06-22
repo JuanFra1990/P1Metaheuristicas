@@ -54,7 +54,7 @@ public class P1Metaheuristicas {
             switch (opcion){
                 case '1':
                    System.out.println("Has seleccionado la opción de cargar datos");
-                   cargaDatos("./archivos/cnf01.dat");
+                   cargaDatos("./archivos/cnf04dat.sec");
                    break;
                 case '2':
                    System.out.println("Has seleccionado la opción de seleccionar semillas");
