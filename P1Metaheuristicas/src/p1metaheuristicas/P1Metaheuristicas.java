@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,8 +23,8 @@ public class P1Metaheuristicas {
 
     private static Integer tamano;
     
-    private static final ArrayList<ArrayList<Integer>> matrizDistancias = new ArrayList<>();
-    private static final ArrayList<ArrayList<Integer>> matrizFlujos = new ArrayList<>();
+    private static ArrayList<ArrayList<Integer>> matrizDistancias = new ArrayList<>();
+    private static ArrayList<ArrayList<Integer>> matrizFlujos = new ArrayList<>();
     
     private static ArrayList<Integer> semillas = new ArrayList<>();
     
@@ -33,7 +34,8 @@ public class P1Metaheuristicas {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-       StringBuilder str=new StringBuilder();
+      LogText.init("Practica1Metaheuristica");
+      StringBuilder str=new StringBuilder();
       long startTime;
       long endTime;
        char opcion = '0';
@@ -53,10 +55,28 @@ public class P1Metaheuristicas {
            opcion=(char)entrada.read();
             switch (opcion){
                 case '1':
+                   LogText.LogWriter("Has seleccionado la opción de cargar datos");
+                   LogText.LogWriter("\r\n");
                    System.out.println("Has seleccionado la opción de cargar datos");
-                   cargaDatos("./archivos/cnf04dat.sec");
+                   String fichero = seleccionFichero();
+                   LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                   LogText.LogWriter("\r\n");
+                   System.out.println("Has seleccionado el fichero " + fichero);
+                   cargaDatos(fichero);
+                   if (fichero.contains("9")){
+                        matrizFlujos.remove(0);
+                        ArrayList<ArrayList<Integer>> mf = new ArrayList<>(255);
+                        for (int i=0; i<255; i++){
+                            mf.add(matrizFlujos.get(i));
+                        }
+                        matrizFlujos.clear();
+                        matrizFlujos = new ArrayList<>(255);
+                        matrizFlujos.addAll(mf);
+                    }
                    break;
                 case '2':
+                   LogText.LogWriter("Has seleccionado la opción de seleccionar semillas");
+                   LogText.LogWriter("\r\n");
                    System.out.println("Has seleccionado la opción de seleccionar semillas");
                    System.out.println("¿Cuantas semillas desea introducir?");
                    Reader entradaNumeroSemillas=new InputStreamReader(System.in);
@@ -71,38 +91,50 @@ public class P1Metaheuristicas {
                         tamanoSemilla--;
                         contador++;
                    }
+                   LogText.LogWriter("Las semillas seleccionadas son: ");
+                   LogText.LogWriter("\r\n");
+                   for (int i = 0; i<semillas.size(); i++){
+                       LogText.LogWriter(semillas.get(i).toString());
+                       LogText.LogWriter("\r\n");
+                   }
+                   
                    break;
                 case '3':
-                    if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
+                    if(matrizDistancias.isEmpty() || matrizFlujos.isEmpty()){
                         System.out.println("Los datos no estan cargados aún, ¿Desea cargarlos? (Responde con S o N)");
                         Reader entradaIn=new InputStreamReader(System.in);
                         opcion=(char)entradaIn.read();
                         if (opcion == 'S'){
-                            cargaDatos("./archivos/cnf02.dat");
+                            fichero = seleccionFichero();
+                            LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                            LogText.LogWriter("\r\n");
+                            System.out.println("Has seleccionado el fichero " + fichero);
+                            cargaDatos(fichero);
                         } else {
                             System.out.println("Sin datos no podemos lanzar el algoritmo, greedy.");
                             System.out.println("Lo sentimos");
                             break;
                         }
-                    } 
-                    
+                    }
+                    LogText.LogWriter("Has seleccionado la opción del Algoritmo Greedy");
+                    LogText.LogWriter("\r\n");
                     System.out.println("Has seleccionado la opción del Algoritmo Greedy");
                     startTime = System.currentTimeMillis();
-                    ArrayList<Integer> valoresDistancia = new ArrayList<>(tamano);
-                    ArrayList<Integer> valoresFlujo = new ArrayList<>(tamano);
                     AlgoritmoGreedy ag = new AlgoritmoGreedy();
                     HerramientasAuxiliares herramientas = new HerramientasAuxiliares();
-                    herramientas.setTamano(tamano-1);
+                    herramientas.setTamano(tamano);
                     herramientas.setMatrizDistancias(matrizDistancias);
                     herramientas.setMatrizFlujos(matrizFlujos);
                     ag.setTamano(tamano);
-                    ag.setArrays(matrizDistancias, matrizFlujos);
-                    ag.calculoFilasGreedy(valoresDistancia, valoresFlujo);
-                    ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy(valoresDistancia, valoresFlujo);
+                    ag.calculoFilasGreedy(matrizDistancias,matrizFlujos);
+                    ArrayList<Integer> vectorSolucion = ag.AlgoritmoGreedy();
                     endTime = System.currentTimeMillis() - startTime;
+                    LogText.LogWriter("Ha tardado " + endTime + " ms");
+                    LogText.LogWriter("\r\n");
                     System.out.println("Ha tardado " + endTime + " ms");
-                     System.out.println("Tiene de coste" + herramientas.costeTotal(vectorSolucion)+ ".");
-                    
+                    LogText.LogWriter("Tiene de coste " + herramientas.costeTotal(vectorSolucion)+ ".");
+                    LogText.LogWriter("\r\n");
+                    System.out.println("Tiene de coste " + herramientas.costeTotal(vectorSolucion)+ ".");
                    break;
                  case '4':
                     if(matrizDistancias.size() == 0 || matrizFlujos.size() == 0){
@@ -110,7 +142,11 @@ public class P1Metaheuristicas {
                         Reader entradaIn=new InputStreamReader(System.in);
                         opcion=(char)entradaIn.read();
                         if (opcion == 'S'){
-                            cargaDatos("./archivos/cnf02.dat");
+                             fichero = seleccionFichero();
+                            LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                            LogText.LogWriter("\r\n");
+                            System.out.println("Has seleccionado el fichero " + fichero);
+                            cargaDatos(fichero);
                         } else {
                             System.out.println("Sin datos no podemos lanzar el algoritmo de búsqueda local.");
                             System.out.println("Lo sentimos");
@@ -124,9 +160,8 @@ public class P1Metaheuristicas {
                     ArrayList<Integer> valoresFlujoBL = new ArrayList<>(tamano);
                     AlgoritmoGreedy alg = new AlgoritmoGreedy();
                     alg.setTamano(tamano);
-                    alg.setArrays(matrizDistancias, matrizFlujos);
-                    alg.calculoFilasGreedy(valoresDistanciaBL, valoresFlujoBL);
-                    ArrayList<Integer> vectorSolucionBL = alg.AlgoritmoGreedy(valoresDistanciaBL, valoresFlujoBL);
+                    alg.calculoFilasGreedy(matrizDistancias, matrizFlujos);
+                    ArrayList<Integer> vectorSolucionBL = alg.AlgoritmoGreedy();
                     
                     BusquedaLocal busquedaLocal = new BusquedaLocal();
                     HerramientasAuxiliares herramientasAuxiliaresBL = new HerramientasAuxiliares();
@@ -150,7 +185,11 @@ public class P1Metaheuristicas {
                         Reader entradaIn=new InputStreamReader(System.in);
                         opcion=(char)entradaIn.read();
                         if (opcion == 'S'){
-                            cargaDatos("./archivos/cnf02.dat");
+                             fichero = seleccionFichero();
+                            LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                            LogText.LogWriter("\r\n");
+                            System.out.println("Has seleccionado el fichero " + fichero);
+                            cargaDatos(fichero);
                         } else {
                             System.out.println("Sin datos no podemos lanzar el algoritmo de búsqueda local.");
                             System.out.println("Lo sentimos");
@@ -207,7 +246,11 @@ public class P1Metaheuristicas {
                         Reader entradaIn=new InputStreamReader(System.in);
                         opcion=(char)entradaIn.read();
                         if (opcion == 'S'){
-                            cargaDatos("./archivos/cnf02.dat");
+                             fichero = seleccionFichero();
+                            LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                            LogText.LogWriter("\r\n");
+                            System.out.println("Has seleccionado el fichero " + fichero);
+                            cargaDatos(fichero);
                         } else {
                             System.out.println("Sin datos no podemos lanzar el algoritmo de Enfriamiento simulado Geometrico.");
                             System.out.println("Lo sentimos");
@@ -269,7 +312,11 @@ public class P1Metaheuristicas {
                         Reader entradaIn=new InputStreamReader(System.in);
                         opcion=(char)entradaIn.read();
                         if (opcion == 'S'){
-                            cargaDatos("./archivos/cnf02.dat");
+                             fichero = seleccionFichero();
+                            LogText.LogWriter("Has seleccionado el fichero " + fichero);
+                            LogText.LogWriter("\r\n");
+                            System.out.println("Has seleccionado el fichero " + fichero);
+                            cargaDatos(fichero);
                         } else {
                             System.out.println("Sin datos no podemos lanzar el algoritmo de Enfriamiento simulado Boltzmann.");
                             System.out.println("Lo sentimos");
@@ -349,6 +396,8 @@ public class P1Metaheuristicas {
      */
     
     public static void cargaDatos(String archivo) throws FileNotFoundException, IOException {
+      matrizDistancias.clear();
+      matrizFlujos.clear();
       String cadena;
       FileReader f = new FileReader(archivo);
       Boolean primeravez=true;
@@ -358,6 +407,8 @@ public class P1Metaheuristicas {
                 if (primeravez) {
                     System.out.println("tamaño de la matriz es:" + cadena + "X" + cadena);
                     tamano = new Integer(cadena);
+                    matrizDistancias = new ArrayList<>(tamano);
+                    matrizFlujos = new ArrayList<>(tamano);
                     primeravez = false;
                 } else {
                     //A partir de hay nos queda coger los numeros de cada matriz y meterlos en una EEDD, una matriz es buena
@@ -398,5 +449,33 @@ public class P1Metaheuristicas {
         int tamFlujos = matrizFlujos.size() -1;
         System.out.println("El tamaño de la matriz de flujos es: " + tamFlujos);
         System.out.println("El tamaño de la matriz de distancias es: " + tamDistancias);
-    } 
+    }
+    
+    public static String seleccionFichero(){
+        System.out.println("¿Que fichero desea seleccionar? (Seleccione un numero del 1 - 10)");
+        String ruta = "";
+        
+        int opcion = -1;
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader bf = new BufferedReader (isr);
+        try {
+             while (opcion < 0 || opcion >10){
+                String lineaTeclado = bf.readLine();
+                opcion = Integer.parseInt(lineaTeclado);
+                System.out.println(opcion);
+                if (opcion > 0 && opcion < 4 || opcion > 5 && opcion < 10){
+                   ruta = "./archivos/cnf0" + opcion + ".dat";
+                } else if (opcion >= 4 && opcion <= 5){
+                   ruta = "./archivos/cnf0" + opcion + "dat.sec";
+                } else if(opcion == 10){
+                     ruta = "./archivos/cnf" + opcion + ".dat";
+                } else {
+                    ruta = "No es posible leer esta opcion, seleccione un numero valido";
+                }
+             }   
+         } catch (IOException ex) {
+             Logger.getLogger(P1Metaheuristicas.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        return ruta;
+    }
  }

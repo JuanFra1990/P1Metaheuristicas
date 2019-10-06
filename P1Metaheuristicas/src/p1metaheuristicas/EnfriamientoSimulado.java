@@ -131,7 +131,7 @@ public class EnfriamientoSimulado {
             }
             
             if(tipoTemperatura == true){
-                temperatura = temperatura * 0.90;
+                temperatura = temperaturaInicial * 0.90;
             }else{
                 temperatura = (temperaturaInicial/(1+log(contador,10)));
             }

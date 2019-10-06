@@ -5,6 +5,7 @@
  */
 package p1metaheuristicas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -64,8 +65,7 @@ public class BusquedaLocal {
      * recorrer cada Array y comparar tanto la distancia minima como el flujo maximo, de superar los umbrales marcados se actualiza el valor y
      * la posicion del Array y se almacena en nuestros vectoresIndice, que más tarde la unión de estos saldra nuestro vectorSolucion.
      */
-    public Integer AlgoritmoBusquedaLocal(){
-        
+    public Integer AlgoritmoBusquedaLocal() throws IOException{
         Integer coste = herramientas.costeTotal(solucionAnterior);
         Integer tamanoSolAnterior = solucionAnterior.size();
         ArrayList<Integer> dlb = new ArrayList<>(tamanoSolAnterior);
@@ -80,16 +80,17 @@ public class BusquedaLocal {
             mejora = false;
             contador++;        
         
-            for (int i = 0; i < tamanoSolAnterior-1 && !mejora; i++) {
+            for (int i = 0; i < tamanoSolAnterior && !mejora; i++) {
                 if (dlb.get(i) == 0) {
                     parada = false;
-                    for (int j = 0; j < tamanoSolAnterior-1 && !mejora; j++) {
+                    for (int j = 0; j < tamanoSolAnterior && !mejora; j++) {
 
                         Integer CosteFactorial = herramientas.costeFactorial(solucionAnterior, i, j, coste);
                         if (CosteFactorial < coste) {
                             coste = CosteFactorial;
-                            // Usamos Swap si vemos que no funciona bien deberiamos usar la funcion Intercambia posiciones de arriba
-                            Collections.swap(solucionAnterior,i,j);
+                            Integer auxiliar = solucionAnterior.get(i);
+                            solucionAnterior.set(i, solucionAnterior.get(j));
+                            solucionAnterior.set(j, auxiliar);
                             dlb.set(i, 0);
                             dlb.set(j, 0);
                             parada = true;
@@ -101,6 +102,8 @@ public class BusquedaLocal {
                     }
                 }
             }
+            LogText.LogWriter("Numero de vuelta: " + contador + " coste:" + coste );
+            LogText.LogWriter("\r\n");
         }
         solucionFinal=solucionAnterior;
         return coste;
